@@ -13,6 +13,7 @@
 #lang racket
 (require "syntax-procs.rkt")
 (require "occurs-procs.rkt")
+(require racket/trace)
 (provide tails n-list? tree-min declared-vars prefix->postfix)
 
 ;; --------------------------------------------------------------------------
@@ -21,7 +22,9 @@
 
 (define tails
   (lambda (lst)
-    '()))          ; only a default value...
+    (if (null? lst)
+        (cons '() '())
+        (cons lst (tails (rest lst))))))
 
 ;; --------------------------------------------------------------------------
 ;; Problem 2                                               (mutual recursion)
@@ -29,7 +32,19 @@
 
 (define n-list?
   (lambda (obj)
-    #f))           ; only a default value...
+    (if (null? obj)
+        #t
+        (if (num-expr? (first obj))
+            (n-list? (rest obj))
+            #f))))
+            
+(define num-expr?
+  (lambda (numexp)
+    (if (number? numexp)
+        #t
+        (if (list? numexp)
+            (n-list? (rest numexp))
+            #f))))
 
 ;; --------------------------------------------------------------------------
 ;; Problem 3                                           (structural recursion)
@@ -37,7 +52,11 @@
 
 (define tree-min
   (lambda (bin-tree)
-    0))            ; only a default value...
+    (if (number? bin-tree)
+        bin-tree
+        (min (first bin-tree)
+             (tree-min (second bin-tree))
+             (tree-min (third bin-tree))))))
 
 ;; --------------------------------------------------------------------------
 ;; Problem 4                                                (little language)
