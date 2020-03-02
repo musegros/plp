@@ -41,7 +41,11 @@
 ;; Problem 4                                                (little language)
 ;; --------------------------------------------------------------------------
 
-; put your tests here
+(check-equal? (declared-vars '(lambda (x) (x y))) '(x))
+(check-equal? (declared-vars '((lambda (x)
+                   (lambda (z) z))
+                 (lambda (x) y) )) '(x z x))
+
 
 ;; --------------------------------------------------------------------------
 ;; Problem 5                                                (little language)

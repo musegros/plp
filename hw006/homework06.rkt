@@ -64,7 +64,15 @@
 
 (define declared-vars
   (lambda (exp)
-    '()))          ; only a default value...
+    (cond
+      ((varref? exp)
+       '())
+      ((lambda? exp)
+       (cons (lambda->param exp)
+             (declared-vars (lambda->body exp))))
+      ((app? exp)
+       (append (declared-vars (app->proc exp))
+               (declared-vars (app->arg exp)))))))
 
 ;; --------------------------------------------------------------------------
 ;; Problem 5                                                (little language)
@@ -72,7 +80,17 @@
 
 (define prefix->postfix
   (lambda (exp)
-    'x))           ; only a default value...
+    (cond
+      ((varref? exp)
+       exp)
+      ((lambda? exp)
+       (make-lambda (lambda->param exp) (lambda->body exp)
+             (prefix->postfix (lambda->body exp))))
+      ((app? exp)
+       (list (prefix->postfix (app->arg exp))
+             (prefix->postfix (app->proc exp)))))))
 
+;(prefix->postfix '(square x))
+(trace prefix->postfix)
+(prefix->postfix '(lambda (y) (x y)))
 ;; --------------------------------------------------------------------------
-
