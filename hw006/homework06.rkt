@@ -84,13 +84,11 @@
       ((varref? exp)
        exp)
       ((lambda? exp)
-       (make-lambda (lambda->param exp) (lambda->body exp)
-             (prefix->postfix (lambda->body exp))))
+       (make-lambda (lambda->param exp)
+                    (prefix->postfix (lambda->body exp))
+       ))
       ((app? exp)
        (list (prefix->postfix (app->arg exp))
              (prefix->postfix (app->proc exp)))))))
 
-;(prefix->postfix '(square x))
-(trace prefix->postfix)
-(prefix->postfix '(lambda (y) (x y)))
 ;; --------------------------------------------------------------------------
