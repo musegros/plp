@@ -1,12 +1,12 @@
 ;;  ------------------------------------------------------------------------
 ;; |   FILE           :  homework07.rkt                                     |
-;; |   AUTHOR         :  Josh Musgrave                                 |
+;; |   AUTHOR         :  Eugene Wallingford                                 |
 ;; |   CREATION DATE  :  2020/03/05                                         |
 ;; |   DESCRIPTION    :  a preprocessor for our little language             |
 ;; |                     and functions that analyze programs in the core    |
 ;;  ------------------------------------------------------------------------
-;; |   MODIFIED BY    :  [ YOUR NAME ]                                      |
-;; |   CREATION DATE  :  [ YOUR DATE ]                                      |
+;; |   MODIFIED BY    :  [ Josh Musgrave ]                                  |
+;; |   CREATION DATE  :  [ 2020/03/12 ]                                     |
 ;; |   DESCRIPTION    :  [ what you added and changed ]                     |
 ;;  ------------------------------------------------------------------------
 
