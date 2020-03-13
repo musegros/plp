@@ -29,33 +29,36 @@
         n
         (+ (remainder n 10) (digit-sum (quotient n 10))))))
 
-;(digit-sum 1984)
-;(digit-sum (expt 18 6))
-
 ;; --------------------------------------------------------------------------
 ;; Problem 2                                          (syntactic abstraction)
 ;; --------------------------------------------------------------------------
-(define test '(lambda (x y z) anything))
+
 (define curry
   (lambda (lambda-exp)
-    (if (null? (lambda->param lambda-exp))
+    (if (null? (cadr lambda-exp))
         (lambda->body lambda-exp)
-        (make-lambda (lambda->param lambda-exp)
-                     (curry (make-lambda (cdadr lambda-exp)
-                                         (lambda->body lambda-exp)))))))
-;(trace curry)
-(curry test)
+        (list 'lambda
+              (list (lambda->param lambda-exp))
+              
+              (curry (list 'lambda
+                           (cdadr lambda-exp)
+                           (lambda->body lambda-exp)))))))
+
 ;; --------------------------------------------------------------------------
 ;; Problem 3                                           (structural recursion)
 ;; --------------------------------------------------------------------------
 
 (define set-add
   (lambda (sym S)
-    '()))
+    (if (member sym S)
+        S
+        (cons sym S))))
 
 (define set-union
   (lambda (S1 S2)
-    '()))
+    (if (null? S1)
+        S2
+        (set-union (rest S1) (set-add (first S1) S2)))))
 
 ;; --------------------------------------------------------------------------
 ;; Problem 4                                           (structural recursion)
@@ -63,19 +66,31 @@
 
 (define set-member?
   (lambda (sym S)
-    #f))
+    (not (boolean? (member sym S)))))
 
 (define set-subset?
   (lambda (S1 S2)
-    #f))
+    (if (null? S1)
+        #t
+        (if (member (first S1) S2)
+            (set-subset? (rest S1) S2)
+            #f))))
 
 ;; --------------------------------------------------------------------------
-;; Problem 5                                               (mutual recursion)
+;; Problem 5                                           (structural recursion)
 ;; --------------------------------------------------------------------------
 
 (define free-vars
   (lambda (exp)
-    '()))
+    (cond [(varref? exp)
+           (set-add exp '())]
+          [(lambda? exp)
+           (remove (lambda->param exp) (free-vars (lambda->body exp)))]
+          [(app? exp)
+           (set-union (free-vars (app->proc exp))
+                      (free-vars (app->arg exp)))]
+          [(let? exp)
+           (free-vars (preprocess exp))])))
 
 ;; --------------------------------------------------------------------------
 ;; preprocess :: full-exp -> core-exp          (for use in testing Problem 5)
